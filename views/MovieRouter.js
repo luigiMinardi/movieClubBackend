@@ -7,4 +7,10 @@ router.get('/search', MovieController.getSearchMovies);
 
 router.get('/new', MovieController.getNewMovies);
 
+router.get('/:pk', MovieController.getMovieById);
+
+router.get('/:pk/reviews', MovieController.getReviewByMovieId);
+
+router.get('/latest', MovieController.getLatestMovie);
+
 module.exports = router;
