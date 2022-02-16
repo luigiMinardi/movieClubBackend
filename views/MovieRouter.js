@@ -13,6 +13,8 @@ router.get('/:pk/reviews', MovieController.getReviewByMovieId);
 
 router.get('/latest', MovieController.getLatestMovie);
 
-router.get('/best', MovieController.getBestMovie);
+router.get('/bests', MovieController.getBestMovies);
+
+router.get('/similar_to/:pk', MovieController.getSimilarMovies);
 
 module.exports = router;

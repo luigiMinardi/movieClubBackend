@@ -16,8 +16,9 @@ MovieController.getSearchMovies = async (req, res) => {
 }
 
 MovieController.getNewMovies = async (req, res) => {
+    console.log(req)
     try {
-        let result = await axios.get(`https://api.themoviedb.org/3/movie/upcoming?api_key=${key}&language=es-ES&page=1`);
+        let result = await axios.get(`https://api.themoviedb.org/3/movie/upcoming?api_key=${key}&language=en-US&page=1`);
         res.send(result.data);
     } catch (error) {
         res.send(error);
@@ -58,10 +59,25 @@ MovieController.getLatestMovie = async (req, res) => {
     }
 }
 
-MovieController.getBestMovie = async (req, res) => {
+MovieController.getBestMovies = async (req, res) => {
+    console.log(req)
+    console.log("hello method")
+    try {
+        console.log("hello try")
+        let result = await axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=${key}&language=en-US&page=1`);
+        res.send(result.data);
+    } catch (error) {
+        console.log("hello error")
+        res.send(error);
+    }
+}
+
+MovieController.getSimilarMovies = async (req, res) => {
+
+    let id = req.params.pk;
 
     try {
-        let result = await axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=${key}&language=en-US&page=1`);
+        let result = await axios.get(`https://api.themoviedb.org/3/movie/${id}/similar?api_key=${key}&language=en-US&page=1`);
         res.send(result.data);
     } catch (error) {
         res.send(error);
