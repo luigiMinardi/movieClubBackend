@@ -58,4 +58,14 @@ MovieController.getLatestMovie = async (req, res) => {
     }
 }
 
+MovieController.getBestMovie = async (req, res) => {
+
+    try {
+        let result = await axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=${key}&language=en-US&page=1`);
+        res.send(result.data);
+    } catch (error) {
+        res.send(error);
+    }
+}
+
 module.exports = MovieController;

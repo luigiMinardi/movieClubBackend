@@ -13,4 +13,6 @@ router.get('/:pk/reviews', MovieController.getReviewByMovieId);
 
 router.get('/latest', MovieController.getLatestMovie);
 
+router.get('/best', MovieController.getBestMovie);
+
 module.exports = router;
