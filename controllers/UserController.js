@@ -53,7 +53,6 @@ UserController.getUserById = (req, res) => {
 }
 
 UserController.getUserMail = (req, res) => {
-    console.log(req.body)
     try {
         User.findOne({where: {email: req.body.email}})
             .then(data => {
