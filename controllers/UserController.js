@@ -52,7 +52,7 @@ UserController.getUserById = (req, res) => {
     }
 }
 
-UserController.getUserMail = (req, res) => {
+UserController.getUserByMail = (req, res) => {
     try {
         User.findOne({where: {email: req.body.email}})
             .then(data => {

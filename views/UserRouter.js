@@ -5,7 +5,7 @@ const UserController = require('../controllers/UserController');
 
 router.get('/', UserController.getUser);
 
-router.get('/email', UserController.getUserMail);
+router.get('/email', UserController.getUserByMail);
 
 router.post('/', UserController.postUser);
 
