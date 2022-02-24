@@ -19,7 +19,6 @@ MovieController.getSearchMovies = async (req, res) => {
 }
 
 MovieController.getNewMovies = async (req, res) => {
-    console.log(req)
     try {
         let result = await axios.get(`${root}movie/upcoming?api_key=${key}&language=${language}&page=${page}`);
         res.send(result.data);
@@ -63,14 +62,10 @@ MovieController.getLatestMovie = async (req, res) => {
 }
 
 MovieController.getBestMovies = async (req, res) => {
-    console.log(req)
-    console.log("hello method")
     try {
-        console.log("hello try")
         let result = await axios.get(`${root}movie/top_rated?api_key=${key}&language=${language}&page=${page}`);
         res.send(result.data);
     } catch (error) {
-        console.log("hello error")
         res.send(error);
     }
 }
