@@ -17,6 +17,8 @@ router.post('/login', UserController.postLogin);
 
 router.put('/:pk', auth, UserController.putUserById);
 
+router.put('/:pk/update-password', auth, UserController.putNewPassword);
+
 router.delete('/:pk', isAdmin, UserController.deleteUserById);
 
 module.exports = router;

@@ -2,13 +2,13 @@ const config = require('./config/config.json');
 const {Sequelize, DataTypes} = require('sequelize');
 
 const sequelize = new Sequelize(
-    process.env.MYSQL_DATABASE || config.development.database, 
-    process.env.MYSQL_USER || config.development.username, 
-    process.env.MYSQL_PASSWORD || config.development.password,
+    process.env.DB_NAME || config.development.database, 
+    process.env.DB_USER || config.development.username, 
+    process.env.DB_PASSWORD || config.development.password,
     {
-        host: process.env.MYSQL_HOST || config.development.host,
-        port: process.env.MYSQL_PORT || config.development.port || '3306',
-        dialect: 'mysql',
+        host: process.env.DB_HOST || config.development.host,
+        port: process.env.DB_PORT || config.development.port || '3306',
+        dialect: process.env.DB_DIALECT || config.development.dialect,
         operatorAliases: false,
         pool: {
             max: 5,  //maximum number of connection in pool

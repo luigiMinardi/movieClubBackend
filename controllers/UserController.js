@@ -106,7 +106,7 @@ UserController.postLogin = (req, res) => {
                     token: token
                 })
             } else {
-                res.status(401).json({ msg: "user o contraseña inválidos" });
+                res.status(401).json({ msg: "Invalid user or password." });
             }
         };
 
@@ -136,14 +136,52 @@ UserController.putUserById = async (req, res) => {
         User.update(data, {
             where: { id: id }
         }).then(updatedUser => {
-            res.status(200).json({msg: `User with id ${id} was updated.`});
+            res.status(200).json({ msg: `User with id ${id} was updated.` });
         });
 
     } catch (error) {
         res.send(error);
     }
-
 }
+
+UserController.putNewPassword = (req, res) => {
+
+    let id = req.params.pk;
+    let oldPassword = req.body.oldPassword;
+    let newPassword = req.body.newPassword;
+
+    User.findOne({
+        where: { id: id }
+    }).then(userFound => {
+        if (userFound) {
+
+            if (bcrypt.compareSync(oldPassword, userFound.password)) {
+                newPassword = bcrypt.hashSync(newPassword, Number.parseInt(authConfig.rounds));
+                let data = {
+                    password: newPassword
+                }
+                userFound.update(data, {})
+                    .then(updated => {
+                        res.send(updated);
+                    })
+                    .catch((error) => {
+                        res.status(400).json({
+                            msg: `Some error happened while updating the password.`,
+                            error: error
+                        });
+                    });
+
+            } else {
+                res.status(401).json({ msg: "Invalid user or password." });
+            }
+        } else {
+            res.status(404).send(`User not found.`);
+        }
+    }).catch((error => {
+        res.status(400).json({ msg: `Something unexpected happened.`, error: error });
+    }));
+
+};
 
 UserController.deleteUserById = async (req, res) => {
 
@@ -153,13 +191,13 @@ UserController.deleteUserById = async (req, res) => {
         User.findOne({
             where: { id: id },
         }).then(user => {
-            if (user){
+            if (user) {
                 user.destroy({
                     truncate: false
                 })
-                res.status(200).json({msg:`User with id ${id} was deleted.`});
+                res.status(200).json({ msg: `User with id ${id} was deleted.` });
             } else {
-                res.status(404).json({msg:`User with id ${id} does not exists, you can't delete a phantom.`})
+                res.status(404).json({ msg: `User with id ${id} does not exists, you can't delete a phantom.` })
             }
             console.log(user)
         });
@@ -167,7 +205,6 @@ UserController.deleteUserById = async (req, res) => {
     } catch (error) {
         res.send(error);
     }
-
 }
 
 module.exports = UserController;
