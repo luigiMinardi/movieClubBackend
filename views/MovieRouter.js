@@ -9,7 +9,11 @@ router.get('/new', MovieController.getNewMovies);
 
 router.get('/latest', MovieController.getLatestMovie);
 
-router.get('/bests', MovieController.getBestMovies);
+router.get('/top', MovieController.getTopRatedMovies);
+
+router.get('/favorites', MovieController.getFavorites);
+
+router.get('/adult', MovieController.getAdultMovies);
 
 router.get('/:pk', MovieController.getMovieById);
 

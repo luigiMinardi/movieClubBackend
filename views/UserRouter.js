@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middlewares/auth');
+const isAdmin = require('../middlewares/isAdmin');
 
 const UserController = require('../controllers/UserController');
 
@@ -16,6 +17,6 @@ router.post('/login', UserController.postLogin);
 
 router.put('/:pk', auth, UserController.putUserById);
 
-router.delete('/:pk', auth, UserController.deleteUserById);
+router.delete('/:pk', isAdmin, UserController.deleteUserById);
 
 module.exports = router;

@@ -148,13 +148,20 @@ UserController.putUserById = async (req, res) => {
 UserController.deleteUserById = async (req, res) => {
 
     let id = req.params.pk;
-    try {
 
-        User.destroy({
+    try {
+        User.findOne({
             where: { id: id },
-            truncate: false
         }).then(user => {
-            res.status(200).json({msg:`User with id ${id} was deleted.`});
+            if (user){
+                user.destroy({
+                    truncate: false
+                })
+                res.status(200).json({msg:`User with id ${id} was deleted.`});
+            } else {
+                res.status(404).json({msg:`User with id ${id} does not exists, you can't delete a phantom.`})
+            }
+            console.log(user)
         });
 
     } catch (error) {
