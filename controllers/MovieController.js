@@ -1,5 +1,5 @@
 const { default: axios } = require('axios');
-const { Movie } = require('../models/movie');
+const { Movie } = require('../models/index');
 const { Op } = require('sequelize');
 
 const MovieController = {};
@@ -119,7 +119,7 @@ MovieController.getFavorites = async (req, res) => {
         if (movie != 0) {
             res.send(movie);
         } else {
-            res.send(400).json({ msg: `You don't have favorites.` });
+            res.status(400).json({ msg: `You don't have favorites.` });
         };
 
     }).catch(error => {
