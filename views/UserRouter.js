@@ -19,6 +19,6 @@ router.put('/:pk', auth, UserController.putUserById);
 
 router.put('/:pk/update-password', auth, UserController.putNewPassword);
 
-router.delete('/:pk', isAdmin, UserController.deleteUserById);
+router.delete('/:pk', auth, isAdmin, UserController.deleteUserById);
 
 module.exports = router;

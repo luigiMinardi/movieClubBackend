@@ -178,7 +178,7 @@ UserController.putNewPassword = (req, res) => {
             res.status(404).send(`User not found.`);
         }
     }).catch((error => {
-        res.status(400).json({ msg: `Something unexpected happened.`, error: error });
+        res.status(400).json({ msg: `Something unexpected happened.`, error: { name: error.name, message: error.message } });
     }));
 
 };

@@ -6,7 +6,7 @@ const UserRouter = require('./views/UserRouter');
 const OrderRouter = require('./views/OrderRouter');
 
 router.use('/movies', MovieRouter);
-router.use('/movies-db', MovieDBRouter);
+router.use('/movie-db', MovieDBRouter);
 router.use('/users', UserRouter);
 router.use('/orders', OrderRouter);
 
