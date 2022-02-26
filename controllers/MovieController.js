@@ -1,5 +1,7 @@
 const { Movie } = require('../models/index');
 const { Op } = require('sequelize');
+const jwt = require('jsonwebtoken');
+const authConfig = require('../config/auth');
 
 const MovieController = {};
 
@@ -59,15 +61,59 @@ MovieController.getAdultMovies = async (req, res) => {
             ]
         }
     }).then(adultMovies => {
-        if (adultMovies != 0) {
+        let token = req.headers.authorization.split(' ')[1];
+        let { user } = jwt.decode(token, authConfig.secret)
+        console.log(user.age)
+        if (adultMovies != 0 && user.age >= 18) {
             res.send(adultMovies);
+        } else if (user.age < 18) {
+            res.status(403).json({msg: 'You need to have 18 years or more to access this zone.'})
         } else {
             res.send("We don't have adult movies.");
         }
     }).catch(error => {
-        res.send(error)
+        res.status(500).json({ msg: 'Something unexpected happened', error: { name: error.name, message: error.message } })
     })
 
+}
+
+MovieController.postNewMovie = (req, res) => {
+
+    try {
+        let title = req.body.title;
+        let description = req.body.description;
+        let adult = req.body.adult;
+        let popularity = req.body.popularity;
+        let image = req.body.image;
+        let date = req.body.date;
+
+        Movie.findOne({
+            where: {
+                title: title,
+            }
+        }).then(moviesWithSameTitle => {
+
+            if (!moviesWithSameTitle) {
+
+                Movie.create({
+                    title: title,
+                    description: description,
+                    adult: adult,
+                    popularity: popularity,
+                    image: image,
+                    date: date
+                }).then(movie => {
+                    res.status(201).json({ msg: `${movie.title}, created!` });
+                }).catch(err => res.status(400).json({ msg: `The movie creation failed.`, error: err }));
+
+            } else {
+                res.status(400).json({ msg: `The movie with the title "${moviesWithSameTitle.title}" is already registered.` });
+            }
+        });
+
+    } catch (error) {
+        res.status(500).json({ msg: `Something unexpected happened while creating movie`, error: { name: error.name, message: error.message } });
+    }
 }
 
 module.exports = MovieController;
