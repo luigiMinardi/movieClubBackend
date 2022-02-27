@@ -151,4 +151,42 @@ MovieController.postNewMovie = (req, res) => {
     }
 }
 
+MovieController.putMovieById = (req, res) => {
+
+    let data = req.body;
+    let id = req.params.pk;
+
+    try {
+        if (data.title) {
+            Movie.findOne({
+                where: {
+                    title: data.title
+                }
+            }).then(movie => {
+                if (movie) {
+                    res.status(409).json({ msg: "The movie with this title already exist" })
+                } else {
+                    Movie.update(data, {
+                        where: { id: id }
+                    }).then(() => {
+                        res.status(200).json({
+                            msg: `Movie with id ${id} was updated.`,
+                        });
+                    });
+                }
+            })
+        } else {
+            Movie.update(data, {
+                where: { id: id }
+            }).then(() => {
+                res.status(200).json({
+                    msg: `Movie with id ${id} was updated.`,
+                });
+            });
+        }
+    } catch (error) {
+        res.send(error);
+    }
+}
+
 module.exports = MovieController;

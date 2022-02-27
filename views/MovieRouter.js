@@ -15,4 +15,6 @@ router.get('/:pk', auth, MovieController.getMovieById);
 
 router.post('/',auth, isAdmin, MovieController.postNewMovie);
 
+router.put('/:pk',auth, isAdmin, MovieController.putMovieById);
+
 module.exports = router;

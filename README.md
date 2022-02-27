@@ -24,6 +24,12 @@ GET    http://localhost:3000/movies/favorites
 
 GET    http://localhost:3000/movies/adult
 
+GET    http://localhost:3000/movies
+
+GET    http://localhost:3000/movies/1
+
+PUT    http://localhost:3000/movies/1
+
 POST   http://localhost:3000/movies
 
 ### orders
