@@ -11,10 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.hasMany(models.Order, {
-        foreignKey: 'usuarioId'
+        foreignKey: 'userId'
       });
       this.hasOne(models.Payment, {
-        foreignKey: 'usuarioId'
+        foreignKey: 'userId'
       });
     }
   }

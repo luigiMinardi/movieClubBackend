@@ -20,6 +20,8 @@ GET    http://localhost:3000/movie-db/similar-to/59
 
 ### movies
 
+POST   http://localhost:3000/movies
+
 GET    http://localhost:3000/movies/favorites
 
 GET    http://localhost:3000/movies/adult
@@ -30,15 +32,17 @@ GET    http://localhost:3000/movies/1
 
 PUT    http://localhost:3000/movies/1
 
-POST   http://localhost:3000/movies
-
 DELETE http://localhost:3000/movies/1
 
 ### orders
 
+POST   http://localhost:3000/orders
+
 GET    http://localhost:3000/orders
 
-POST   http://localhost:3000/orders
+GET    http://localhost:3000/orders/1
+
+GET    http://localhost:3000/orders/top-rated
 
 ### users
 
