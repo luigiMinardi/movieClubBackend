@@ -6,12 +6,14 @@ const isAdmin = require('../middlewares/isAdmin');
 
 const OrderController = require('../controllers/OrderController');
 
-router.post('/', OrderController.postNewOrder);
+router.post('/', auth, OrderController.postNewOrder);
 
 router.get('/', auth, isAdmin, OrderController.getAllOrders);
 
 router.get('/top-rated', auth, isAdmin, OrderController.getAllTopRatedOrders);
 
 router.get('/:pk', auth, OrderController.getOrderById);
+
+router.delete('/:pk', auth, OrderController.deleteOrderById);
 
 module.exports = router;
