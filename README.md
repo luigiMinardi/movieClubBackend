@@ -32,6 +32,8 @@ PUT    http://localhost:3000/movies/1
 
 POST   http://localhost:3000/movies
 
+DELETE http://localhost:3000/movies/1
+
 ### orders
 
 GET    http://localhost:3000/orders

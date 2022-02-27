@@ -199,9 +199,7 @@ UserController.deleteUserById = async (req, res) => {
             } else {
                 res.status(404).json({ msg: `User with id ${id} does not exists, you can't delete a phantom.` })
             }
-            console.log(user)
         });
-
     } catch (error) {
         res.send(error);
     }

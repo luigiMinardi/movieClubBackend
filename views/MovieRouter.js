@@ -17,4 +17,6 @@ router.post('/',auth, isAdmin, MovieController.postNewMovie);
 
 router.put('/:pk',auth, isAdmin, MovieController.putMovieById);
 
+router.delete('/:pk',auth, isAdmin, MovieController.deleteMovieById);
+
 module.exports = router;
