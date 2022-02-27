@@ -37,6 +37,7 @@ UserController.postNewUser = (req, res) => {
         let nickname = req.body.nickname;
         let email = req.body.email;
         let password = bcrypt.hashSync(req.body.password, Number.parseInt(authConfig.rounds));
+        let isAdmin = req.body.isAdmin || false;
 
         User.findAll({
             where: {
@@ -66,7 +67,8 @@ UserController.postNewUser = (req, res) => {
                     surname: surname,
                     nickname: nickname,
                     email: email,
-                    password: password
+                    password: password,
+                    isAdmin: isAdmin
                 }).then(user => {
                     res.status(201).json({ msg: `${user.name}, welcome!` });
                 }).catch(err => res.send(err));

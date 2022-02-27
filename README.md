@@ -45,7 +45,7 @@
 
 * Create the data base:
 
-    <span style="color:red">You need to have mysql installed and running on your computer for this to work</span>. At the first time you may need to create the db directly on mysql (or your UI to use it (like Mysql Workbench)) since sometimes the `sequelize db:create` bugs, but after creating it will work fine so whenever you drop your db you can reacreate by the command instead of manually.
+    <u>**You need to have mysql installed and running on your computer for this to work**</u>. At the first time you may need to create the db directly on mysql (or your UI to use it (like Mysql Workbench)) since sometimes the `sequelize db:create` bugs, but after creating it will work fine so whenever you drop your db you can reacreate by the command instead of manually.
 
     NPM
     ```bash
@@ -84,7 +84,68 @@ Now you are ready to use it.
 
 ## Data Base draw
 
+```mermaid
+%%{init: {
+    'theme': 'base', 
+    'themeVariables': { 
+        'primaryColor': '#282a36',
+        'primaryTextColor': '#282a36',
+        'mainBkg': '#bd93f9',
+        'lineColor': '#6272a4'
+    }
+}}%%
+erDiagram
+    USER ||--o{ ORDER : ""
+    USER {
+        integer id
+        string name
+        integer age
+        string surname
+        string email
+        string nickname
+        string password
+        boolean isAdmin
+        date createdAt
+        date updatedAt
+    }
+    ORDER {
+        integer id
+        integer price
+        integer movieId
+        integer userId
+        date createdAt
+        date updatedAt
+    }
+    MOVIE ||--o{ ORDER : ""
+    MOVIE {
+        integer id
+        string title
+        string description
+        boolean adult
+        float popularity
+        string image
+        string date
+        date createdAt
+        date updatedAt
+    }
+```
+### Expected Behaviour
 
+`createdAt`, `updatedAt`, `id`, are obligatory and auto-generated.
+
+the `id` is the **Primary Key** of the tables.
+
+USER `name`, `email`, are obligatory.
+
+USER `email`, `nickname`, are unique.
+
+MOVIE `title`, `description`, `adult`, are obligatory.
+
+ORDER `movieId`, `userId`, `date`, are obligatory.
+
+`movieId` and `userId` are the MOVIE and the USER **Foreign Key** respectively.
+
+You may see references for the **Primary Key** as `pk` and for the **foreign key** as `fk`.
 
 ## Endpoints
 
