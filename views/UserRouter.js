@@ -5,7 +5,7 @@ const isAdmin = require('../middlewares/isAdmin');
 
 const UserController = require('../controllers/UserController');
 
-router.get('/', auth, UserController.getUser);
+router.get('/', auth, UserController.getAllUsers);
 
 router.get('/:pk', auth, UserController.getUserById);
 

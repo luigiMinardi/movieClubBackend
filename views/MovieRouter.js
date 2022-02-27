@@ -5,9 +5,13 @@ const isAdmin = require('../middlewares/isAdmin');0
 
 const MovieController = require('../controllers/MovieController');
 
+router.get('/', MovieController.getAllMovies);
+
 router.get('/favorites',auth, MovieController.getFavorites);
 
 router.get('/adult',auth, MovieController.getAdultMovies);
+
+router.get('/:pk', auth, MovieController.getMovieById);
 
 router.post('/',auth, isAdmin, MovieController.postNewMovie);
 

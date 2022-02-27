@@ -6,7 +6,7 @@ const { Op } = require('sequelize');
 
 const UserController = {};
 
-UserController.getUser = (req, res) => {
+UserController.getAllUsers = (req, res) => {
     try {
         User.findAll()
             .then(data => {
@@ -91,7 +91,7 @@ UserController.postLogin = (req, res) => {
         where: { email: email }
     }).then(user => {
         if (!user) {
-            res.status(400).send("Invalid user or password.");
+            res.status(400).json({ msg: "Invalid user or password." });
         } else {
 
             // user exists, now checking if the password is valid

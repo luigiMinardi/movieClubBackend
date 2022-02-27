@@ -5,6 +5,42 @@ const authConfig = require('../config/auth');
 
 const MovieController = {};
 
+MovieController.getAllMovies = (req, res) => {
+    try {
+        Movie.findAll({
+            where: {
+                adult: {
+                    [Op.notLike]: 1
+                }
+            }
+        })
+            .then(data => {
+                res.status(200).json(data);
+            });
+    } catch (err) {
+        res.send(err);
+    }
+}
+
+MovieController.getMovieById = (req, res) => {
+    try {
+        Movie.findByPk(req.params.pk)
+            .then(data => {
+                let token = req.headers.authorization.split(' ')[1];
+                let { user } = jwt.decode(token, authConfig.secret)
+                if (data.adult && user.age >= 18) {
+                    res.status(200).json(data);
+                } else if (!data.adult) {
+                    res.status(200).json(data);
+                } else {
+                    res.status(403).json({ msg: 'You need to have 18 years or more to access this movie.' })
+                }
+            });
+    } catch (err) {
+        res.send(err);
+    }
+}
+
 MovieController.getFavorites = async (req, res) => {
     // need refactor to be generic
     // create a new favorite function
@@ -67,14 +103,13 @@ MovieController.getAdultMovies = async (req, res) => {
         if (adultMovies != 0 && user.age >= 18) {
             res.send(adultMovies);
         } else if (user.age < 18) {
-            res.status(403).json({msg: 'You need to have 18 years or more to access this zone.'})
+            res.status(403).json({ msg: 'You need to have 18 years or more to access this zone.' })
         } else {
             res.send("We don't have adult movies.");
         }
     }).catch(error => {
         res.status(500).json({ msg: 'Something unexpected happened', error: { name: error.name, message: error.message } })
     })
-
 }
 
 MovieController.postNewMovie = (req, res) => {

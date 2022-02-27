@@ -24,11 +24,13 @@ GET    http://localhost:3000/movies/favorites
 
 GET    http://localhost:3000/movies/adult
 
+POST   http://localhost:3000/movies
+
 ### orders
 
-GET    http://localhost:3000/orders/
+GET    http://localhost:3000/orders
 
-POST   http://localhost:3000/orders/
+POST   http://localhost:3000/orders
 
 ### users
 
@@ -44,7 +46,7 @@ GET    http://localhost:3000/users/1
 
 PUT    http://localhost:3000/users/1
 
-PUT    http://localhost:3000/users/5/update-password
+PUT    http://localhost:3000/users/1/update-password
 
-DELETE http://localhost:3000/users/4
+DELETE http://localhost:3000/users/2
 
