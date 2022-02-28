@@ -154,8 +154,13 @@ To see the endpoints and how they works, check our [documentation](https://githu
 # WIP
 
 [] - Improve admin rights
+
 [] - Creation of payment
+
 [] - Refactor of view-controllers to be more restfull
+
 [] - turn some endpoints in more generic versions of them to be more scalable
+
 [] - Automated tests
+
 [] - Adding error responses to the documentation
