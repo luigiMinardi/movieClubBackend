@@ -19,6 +19,11 @@
 
 This is a REST API of a movie club, using mysql as data base. Having tables for `users`, `movies` and `orders`.
 
+<div align="center">
+
+[![Documentation](https://img.shields.io/badge/go%20to-documentation-informational?style=for-the-badge)](https://github.com/luigiMinardi/movieClubBackend/wiki)
+</div>
+
 ## Installing
 
 * First clone the repository:
@@ -169,6 +174,11 @@ You may see references for the **Primary Key** as `pk` and for the **foreign key
 ## Endpoints
 
 To see the endpoints and how they works, check our [documentation](https://github.com/luigiMinardi/movieClubBackend/wiki).
+
+<div align="center">
+
+[![Documentation](https://img.shields.io/badge/go%20to-documentation-informational?style=for-the-badge)](https://github.com/luigiMinardi/movieClubBackend/wiki)
+</div>
 
 # WIP
 
