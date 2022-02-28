@@ -5,15 +5,15 @@ const isAdmin = require('../middlewares/isAdmin');
 
 const UserController = require('../controllers/UserController');
 
-router.get('/', auth, UserController.getAllUsers);
-
-router.get('/:pk', auth, UserController.getUserById);
+router.post('/', UserController.postNewUser);
 
 router.post('/email', auth, UserController.postFindUserByMail);
 
-router.post('/', UserController.postNewUser);
-
 router.post('/login', UserController.postLogin);
+
+router.get('/', auth, UserController.getAllUsers);
+
+router.get('/:pk', auth, UserController.getUserById);
 
 router.put('/:pk', auth, UserController.putUserById);
 
