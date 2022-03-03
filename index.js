@@ -2,7 +2,7 @@ const cors = require('cors');
 const express = require('express');
 const app = express();
 const router = require('./router');
-const PORT = 3000;
+const PORT = 5500;
 const db = require('./db.js');
 
 //Middleware
@@ -11,7 +11,6 @@ app.use(cors());
 
 app.use(router);
 
-db.then(()=>{
-    app.listen(PORT, ()=> console.log(`Server on port ${PORT}`)); //Conectado a la base de datos
-})
-.catch((err)=> console.log(err.message));
+db.then(() => {
+    app.listen(PORT, () => console.log(`Server on port ${PORT}`)); //Conectado a la base de datos
+}).catch((err) => console.log(err.message));
