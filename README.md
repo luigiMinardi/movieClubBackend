@@ -221,19 +221,20 @@ To see the endpoints and how they works, check our [documentation](https://githu
 
 # WIP
 
-[] - Improve admin rights
+* [ ] - Improve admin rights
 
-[] - Creation of payment
+* [ ] - Creation of payment
 
-[] - Refactor of view-controllers to be more restfull
+* [ ] - Refactor of view-controllers to be more restfull
 
-[] - turn some endpoints in more generic versions of them to be more scalable
+* [ ] - turn some endpoints in more generic versions of them to be more scalable
 
-[] - Field validation
-    [] - Email, Name, Nickname should NOT allow blank values ("")
-    [] - Email should NOT accept non email values (asdf = error, asdf@asdf = error, asdf@asdf.asdf = valid)
-    [] - Password minimal lenght and complexity.
+* [ ] - Field validation
+    * [ ] - Email, Name, Nickname should NOT allow blank values ("")
+    * [ ] - Email should NOT accept non email values (asdf = error, asdf@asdf = error, asdf@asdf.asdf = valid)
+    * [ ] - Password minimal lenght and complexity.
+    * [ ] - Return all input errors at once.
 
-[] - Automated tests
+* [ ] - Automated tests
 
-[] - Adding error responses to the documentation
+* [ ] - Adding error responses to the documentation

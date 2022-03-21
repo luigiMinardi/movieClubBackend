@@ -75,12 +75,12 @@ UserController.postNewUser = (req, res) => {
                     password: password,
                     isAdmin: isAdmin
                 }).then(user => {
-                    res.status(201).json({ msg: `${user.name}, welcome!` });
+                    res.status(201).json({ msg: `${user.name}, welcome!`, user: user });
                 }).catch(err => res.status(400).json({ msg: `Something unexpected happened while creating user`, error: { name: err.name, message: err.message, detail: err } }));
 
             } else {
                 console.log(usersWithSameEmailOrNickname);
-                res.status(200).json({ msg: 'The user with this email or nickname is already registered.'});
+                res.status(200).json({ msg: 'The user with this email or nickname is already registered.' });
             }
         });
 
@@ -143,7 +143,7 @@ UserController.putUserById = async (req, res) => {
         User.update(data, {
             where: { id: id }
         }).then(updatedUser => {
-            res.status(200).json({ msg: `User with id ${id} was updated.` });
+            res.status(200).json({ msg: `User with id ${id} was updated.`, user: updatedUser });
         }).catch(error => res.status(422).json({ msg: `Something unexpected happened while updating user data.`, error: { name: error.name, message: error.message, detail: error } }));
 
     } catch (error) {
