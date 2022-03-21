@@ -229,6 +229,11 @@ To see the endpoints and how they works, check our [documentation](https://githu
 
 [] - turn some endpoints in more generic versions of them to be more scalable
 
+[] - Field validation
+    [] - Email, Name, Nickname should NOT allow blank values ("")
+    [] - Email should NOT accept non email values (asdf = error, asdf@asdf = error, asdf@asdf.asdf = valid)
+    [] - Password minimal lenght and complexity.
+
 [] - Automated tests
 
 [] - Adding error responses to the documentation

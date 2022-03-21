@@ -36,6 +36,11 @@ UserController.postNewUser = (req, res) => {
         let surname = req.body.surname;
         let nickname = req.body.nickname;
         let email = req.body.email;
+        if (!req.body.password) {
+            let error = new Error('You need to pass a password.')
+            error.name = 'Missing Password'
+            throw error;
+        }
         let password = bcrypt.hashSync(req.body.password, Number.parseInt(authConfig.rounds));
         let isAdmin = req.body.isAdmin || false;
 
@@ -57,9 +62,9 @@ UserController.postNewUser = (req, res) => {
 
             }
 
-        }).then(usersWithSameEmailOrPassword => {
+        }).then(usersWithSameEmailOrNickname => {
 
-            if (usersWithSameEmailOrPassword == 0) {
+            if (usersWithSameEmailOrNickname == 0) {
 
                 User.create({
                     name: name,
@@ -71,16 +76,16 @@ UserController.postNewUser = (req, res) => {
                     isAdmin: isAdmin
                 }).then(user => {
                     res.status(201).json({ msg: `${user.name}, welcome!` });
-                }).catch(err => res.send(err));
+                }).catch(err => res.status(400).json({ msg: `Something unexpected happened while creating user`, error: { name: err.name, message: err.message, detail: err } }));
 
             } else {
-                console.log(usersWithSameEmailOrPassword);
-                res.status(400).json({ msg: 'The user with this email is already registered.' });
+                console.log(usersWithSameEmailOrNickname);
+                res.status(200).json({ msg: 'The user with this email or nickname is already registered.'});
             }
         });
 
     } catch (error) {
-        res.send(error);
+        res.status(422).json({ msg: `Something unexpected happened while getting user data.`, error: { name: error.name, message: error.message, detail: error } });
     }
 }
 
@@ -139,10 +144,10 @@ UserController.putUserById = async (req, res) => {
             where: { id: id }
         }).then(updatedUser => {
             res.status(200).json({ msg: `User with id ${id} was updated.` });
-        });
+        }).catch(error => res.status(422).json({ msg: `Something unexpected happened while updating user data.`, error: { name: error.name, message: error.message, detail: error } }));
 
     } catch (error) {
-        res.send(error);
+        res.status(422).json({ msg: `Something unexpected happened while getting user data.`, error: { name: error.name, message: error.message, detail: error } });
     }
 }
 
