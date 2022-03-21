@@ -2,6 +2,10 @@ const { Movie } = require('../models/index');
 const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const authConfig = require('../config/auth');
+const { default: axios } = require('axios');
+
+const key = '210d6a5dd3f16419ce349c9f1b200d6d';
+const root = 'https://api.themoviedb.org/3/';
 
 const MovieController = {};
 
@@ -76,7 +80,7 @@ MovieController.getFavorites = async (req, res) => {
         if (movie != 0) {
             res.send(movie);
         } else {
-            res.status(400).json({ msg: `You don't have favorites.` });
+            res.status(200).json({ msg: `You don't have favorites.` });
         };
 
     }).catch(error => {
@@ -210,5 +214,56 @@ MovieController.deleteMovieById = (req, res) => {
         res.send(error);
     }
 }
+
+MovieController.deleteAllMovies = (req, res) => {
+    try {
+        Movie.destroy({
+            where: {},
+            truncate: false
+        })
+            .then(peliculasEliminadas => {
+                res.send(`${peliculasEliminadas} has been deleted.`);
+            })
+
+    } catch (error) {
+        res.send(error);
+    }
+}
+
+//Random number between two limits function
+const minMaxRoundedRandom = (min, max) => {
+    return Math.round(Math.random() * (max - min) + min);
+}
+
+MovieController.cloneMovies = async (req, res) => {
+    ///Variable para guardar el root para ver el póster
+    try {
+        let TMDBimgUrlRoot = "https://image.tmdb.org/t/p/w500";
+        //bucle para recorrer 25 páginas de resultados. El valor de page lo saco de una función random para que no siempre muestre las mismas páginas.
+        const pageNumber = 5 // !MAX = 25
+        for (let j = 1; j <= pageNumber; j++) {
+            let results = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${key}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=${minMaxRoundedRandom(1, pageNumber)}&with_watch_monetization_types=flatrate`);
+            //Saco el número de resultados por página para meterselo al siguiente bucle
+            let numbOfResultsPerPageTMDB = results.data.results.length
+            //Recorro cada elemento de la página para ir guardándolo acorde a los campos de mi BBDD
+            for (let i = 0; i < numbOfResultsPerPageTMDB; i++) {
+                //Por cada iteración creo un elemento
+                Movie.create({
+                    //A la izquierda mis campos de mi BBDD
+                    //A la derecha los campos que devuelve TMDB
+                    title: results.data.results[i].original_title,
+                    description: results.data.results[i].overview,
+                    adult: results.data.results[i].adult,
+                    popularity: results.data.results[i].popularity,
+                    image: (TMDBimgUrlRoot + "/" + results.data.results[i].poster_path)
+                })
+            }
+        }
+        res.send(`${pageNumber} pages have been clonated succesfully, with a max amount of ${500} films if 25 pages`)
+    } catch (error) {
+        res.status(500).json({ msg: `Something unexpected happened while cloning movieDB data.`, error: { name: error.name, message: error.message, detail: error } });
+    }
+};
+
 
 module.exports = MovieController;
