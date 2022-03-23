@@ -12,6 +12,8 @@ router.get('/', auth, isAdmin, OrderController.getAllOrders);
 
 router.get('/top-rated', auth, isAdmin, OrderController.getAllTopRatedOrders);
 
+router.get('/user', auth, OrderController.getAllOrdersOfSomeUser);
+
 router.get('/:pk', auth, OrderController.getOrderById);
 
 router.delete('/:pk', auth, OrderController.deleteOrderById);

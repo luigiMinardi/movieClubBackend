@@ -59,6 +59,32 @@ OrderController.getAllOrders = (req, res) => {
     }
 }
 
+OrderController.getAllOrdersOfSomeUser = (req, res) => {
+    let body = req.body;
+
+    let token = req.headers.authorization.split(' ')[1];
+    let { user } = jwt.decode(token, authConfig.secret);
+    let userId;
+    if (!user.isAdmin) {
+        userId = user.id; // if normal user use user id
+    } else {
+        userId = body.id || user.id; // if adm use id passed in pk, if none use user id
+    }
+    console.log(user, 'usr')
+    console.log(userId, 'usr id')
+    try {
+        Order.findAll({
+            where: {
+                userId: userId
+            }
+        }).then(orders => {
+            res.status(200).json(orders);
+        });
+    } catch (e) {
+        res.status(400).json({ msg: 'Something unexpected happened', error: e })
+    }
+}
+
 OrderController.getOrderById = (req, res) => {
 
     let id = req.params.pk;
@@ -69,7 +95,7 @@ OrderController.getOrderById = (req, res) => {
                 id: id
             }
         }).then(order =>
-            order ? res.status(200).json(order) : res.status(404).json({msg: 'This order does not exist.'})
+            order ? res.status(200).json(order) : res.status(404).json({ msg: 'This order does not exist.' })
         );
     } catch (e) {
         res.status(400).json({ msg: 'Something unexpected happened', error: e })
