@@ -2,28 +2,23 @@ const jwt = require('jsonwebtoken');
 const authConfig = require('../config/auth');
 
 module.exports = (req, res, next) => {
-
     // If you have the token
     if (!req.headers.authorization) {
-        res.status(401).json({ msg: "Unauthorized." });
+        res.status(401).json({ msg: 'Unauthorized.' });
     } else {
-
         // Remove the "Bearer " from the token (Below I have a comment explaining better)
-        let token = req.headers.authorization.split(" ")[1];
+        let token = req.headers.authorization.split(' ')[1];
 
         // Check if token is valid
         jwt.verify(token, authConfig.secret, (err, decoded) => {
-
             if (err) {
-                res.status(500).json({ msg: "Token error", err });
+                res.status(500).json({ msg: 'Token error', err });
             } else {
                 req.user = decoded;
                 next();
             }
-
-        })
+        });
     }
-
 };
 
 /*

@@ -11,10 +11,10 @@
 ![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
 ![JsonWebToken](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)
 
-
 ![Yarn](https://img.shields.io/badge/Yarn-2C8EBB?style=for-the-badge&logo=yarn&logoColor=white)
 ![OR](https://img.shields.io/badge/-or-lightgrey?style=for-the-badge)
 ![NPM](https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white)
+
 </div>
 
 This is a REST API of a movie club, using mysql as data base. Having tables for `users`, `movies` and `orders`.
@@ -22,30 +22,34 @@ This is a REST API of a movie club, using mysql as data base. Having tables for 
 <div align="center">
 
 [![Documentation](https://img.shields.io/badge/go%20to-documentation-informational?style=for-the-badge)](https://github.com/luigiMinardi/movieClubBackend/wiki)
+
 </div>
 
 ## Installing
 
-* First clone the repository:
+-   First clone the repository:
 
     ```bash
     git clone https://github.com/luigiMinardi/movieClubBackend
     ```
-    
+
     enter in the cloned repo `cd movieClubBackend` or open in your IDE, for example `code movieClubBackend` if you're using VSC.
 
-* Install all the dependencies:
+-   Install all the dependencies:
 
     NPM
+
     ```bash
     npm i
     ```
+
     Yarn
+
     ```bash
     yarn
     ```
 
-* At `config/config.js` change:
+-   At `config/config.js` change:
 
     ```js
     "development": {
@@ -57,7 +61,7 @@ This is a REST API of a movie club, using mysql as data base. Having tables for 
     ```
 
     To
-    
+
     ```js
     "development": {
         ...,
@@ -67,43 +71,54 @@ This is a REST API of a movie club, using mysql as data base. Having tables for 
     }
     ```
 
-* Create the data base:
+-   Create the data base:
 
     <u>**You need to have mysql installed and running on your computer for this to work**</u>. At the first time you may need to create the db directly on mysql (or your UI to use it (like Mysql Workbench)) since sometimes the `sequelize db:create` bugs, but after creating it will work fine so whenever you drop your db you can reacreate by the command instead of manually.
 
     NPM
+
     ```bash
     npx sequelize db:create
     ```
+
     Yarn
+
     ```bash
     yarn sequelize db:create
     ```
 
-* Make the migrations:
+-   Make the migrations:
 
     NPM
+
     ```bash
     npx sequelize db:migrate
     ```
+
     Yarn
+
     ```bash
     yarn sequelize db:migrate
     ```
 
-* Run the server:
+-   Run the server:
 
     NPM
+
     ```bash
     npm run dev
     ```
+
     Yarn
+
     ```bash
     yarn nodemon
     ```
 
 ### Configuring .env
+
 In your root repository create a `.env` file and add this:
+
 ```m
 # index.js
 PORT=3000 # server port
@@ -149,8 +164,8 @@ Now you are ready to use it.
 
 ```mermaid
 %%{init: {
-    'theme': 'base', 
-    'themeVariables': { 
+    'theme': 'base',
+    'themeVariables': {
         'primaryColor': '#282a36',
         'primaryTextColor': '#282a36',
         'mainBkg': '#bd93f9',
@@ -192,6 +207,7 @@ erDiagram
         date updatedAt
     }
 ```
+
 ### Expected Behaviour
 
 `createdAt`, `updatedAt`, `id`, are obligatory and auto-generated.
@@ -217,24 +233,25 @@ To see the endpoints and how they works, check our [documentation](https://githu
 <div align="center">
 
 [![Documentation](https://img.shields.io/badge/go%20to-documentation-informational?style=for-the-badge)](https://github.com/luigiMinardi/movieClubBackend/wiki)
+
 </div>
 
 # WIP
 
-* [ ] - Improve admin rights
+-   [ ] -   Improve admin rights
 
-* [ ] - Creation of payment
+-   [ ] -   Creation of payment
 
-* [ ] - Refactor of view-controllers to be more restfull
+-   [ ] -   Refactor of view-controllers to be more restful
 
-* [ ] - turn some endpoints in more generic versions of them to be more scalable
+-   [ ] -   turn some endpoints in more generic versions of them to be more scalable
 
-* [ ] - Field validation
-    * [ ] - Email, Name, Nickname should NOT allow blank values ("")
-    * [ ] - Email should NOT accept non email values (asdf = error, asdf@asdf = error, asdf@asdf.asdf = valid)
-    * [ ] - Password minimal lenght and complexity.
-    * [ ] - Return all input errors at once.
+-   [ ] -   Field validation
+        -   [ ] -   Email, Name, Nickname should NOT allow blank values ("")
+        -   [ ] -   Email should NOT accept non email values (asdf = error, asdf@asdf = error, asdf@asdf.asdf = valid)
+        -   [ ] -   Password minimal length and complexity.
+        -   [ ] -   Return all input errors at once.
 
-* [ ] - Automated tests
+-   [ ] -   Automated tests
 
-* [ ] - Adding error responses to the documentation
+-   [ ] -   Adding error responses to the documentation

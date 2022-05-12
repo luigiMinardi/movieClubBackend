@@ -3,7 +3,6 @@ const router = express.Router();
 const auth = require('../middlewares/auth');
 const isAdmin = require('../middlewares/isAdmin');
 
-
 const OrderController = require('../controllers/OrderController');
 
 router.post('/', auth, OrderController.postNewOrder);

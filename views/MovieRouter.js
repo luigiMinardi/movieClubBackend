@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middlewares/auth');
-const isAdmin = require('../middlewares/isAdmin'); 0
+const isAdmin = require('../middlewares/isAdmin');
 
 const MovieController = require('../controllers/MovieController');
 
@@ -9,7 +9,7 @@ router.post('/', auth, isAdmin, MovieController.postNewMovie);
 
 router.get('/', MovieController.getAllMovies);
 
-router.get('/clone', auth, isAdmin, MovieController.cloneMovies)
+router.get('/clone', auth, isAdmin, MovieController.cloneMovies);
 
 router.get('/favorites', auth, MovieController.getFavorites);
 
