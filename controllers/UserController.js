@@ -4,245 +4,425 @@ const authConfig = require('../config/auth');
 const jwt = require('jsonwebtoken');
 const { Op } = require('sequelize');
 
-const UserController = {};
+class UserMethods {
+    constructor() {}
 
-UserController.getAllUsers = (req, res) => {
-    try {
-        User.findAll().then((data) => {
-            res.send(data);
-        });
-    } catch (err) {
-        res.send(err);
-    }
-};
-
-UserController.getUserById = (req, res) => {
-    try {
-        User.findByPk(req.params.pk).then((data) => {
-            res.send(data);
-        });
-    } catch (err) {
-        res.send(err);
-    }
-};
-
-UserController.postNewUser = (req, res) => {
-    try {
-        let name = req.body.name;
-        let age = req.body.age;
-        let surname = req.body.surname;
-        let nickname = req.body.nickname;
-        let email = req.body.email;
-        if (!req.body.password) {
-            let error = new Error('You need to pass a password.');
-            error.name = 'Missing Password';
-            throw error;
-        }
-        let password = bcrypt.hashSync(
-            req.body.password,
-            Number.parseInt(authConfig.rounds)
-        );
-        let isAdmin = req.body.isAdmin || false;
-
-        User.findAll({
+    async postNewUser(enrollment) {
+        const newUser = User.findAll({
             where: {
                 [Op.or]: [
                     {
                         email: {
-                            [Op.like]: email,
+                            [Op.like]: enrollment.email,
                         },
                     },
                     {
                         nickname: {
-                            [Op.like]: nickname,
+                            [Op.like]: enrollment.nickname,
                         },
                     },
                 ],
             },
-        }).then((usersWithSameEmailOrNickname) => {
-            if (usersWithSameEmailOrNickname == 0) {
-                User.create({
-                    name: name,
-                    age: age,
-                    surname: surname,
-                    nickname: nickname,
-                    email: email,
-                    password: password,
-                    isAdmin: isAdmin,
-                })
-                    .then((user) => {
-                        res.status(201).json({
-                            msg: `${user.name}, welcome!`,
-                            user: user,
-                        });
-                    })
-                    .catch((err) =>
-                        res.status(400).json({
-                            msg: `Something unexpected happened while creating user`,
-                            error: {
-                                name: err.name,
-                                message: err.message,
-                                detail: err,
-                            },
+        })
+            .then((usersWithSameEmailOrNickname) => {
+                if (usersWithSameEmailOrNickname == 0) {
+                    return User.create(enrollment)
+                        .then((user) => {
+                            return {
+                                status: 201,
+                                data: {
+                                    msg: `${user.name}, welcome!`,
+                                    user: user,
+                                },
+                            };
                         })
-                    );
-            } else {
-                console.log(usersWithSameEmailOrNickname);
-                res.status(200).json({
-                    msg: 'The user with this email or nickname is already registered.',
-                });
-            }
-        });
-    } catch (error) {
-        res.status(422).json({
-            msg: `Something unexpected happened while getting user data.`,
-            error: { name: error.name, message: error.message, detail: error },
-        });
-    }
-};
-
-UserController.postLogin = (req, res) => {
-    let email = req.body.email;
-    let password = req.body.password;
-
-    User.findOne({
-        where: { email: email },
-    })
-        .then((user) => {
-            if (!user) {
-                res.status(400).json({ msg: 'Invalid user or password.' });
-            } else {
-                // user exists, now checking if the password is valid
-                if (bcrypt.compareSync(password, user.password)) {
-                    // decrypt db pass and check if is the same as the one sent by the user
-
-                    let token = jwt.sign({ user: user }, authConfig.secret, {
-                        expiresIn: authConfig.expires,
-                    });
-
-                    res.status(200).json({
-                        user: user,
-                        token: token,
-                    });
+                        .catch((err) => {
+                            return {
+                                status: 400,
+                                data: {
+                                    msg: `Something unexpected happened while creating user`,
+                                    error: {
+                                        name: err.name,
+                                        message: err.message,
+                                        detail: err,
+                                    },
+                                },
+                            };
+                        });
                 } else {
-                    res.status(401).json({ msg: 'Invalid user or password.' });
-                }
-            }
-        })
-        .catch((error) => {
-            res.send(error);
-        });
-};
-
-UserController.postFindUserByMail = (req, res) => {
-    try {
-        User.findOne({ where: { email: req.body.email } }).then((data) => {
-            res.send(data);
-        });
-    } catch (err) {
-        res.send(err);
-    }
-};
-
-UserController.putUserById = async (req, res) => {
-    let data = req.body;
-    let id = req.params.pk;
-
-    try {
-        User.update(data, {
-            where: { id: id },
-        })
-            .then((updatedUser) => {
-                res.status(200).json({
-                    msg: `User with id ${id} was updated.`,
-                    user: updatedUser,
-                });
-            })
-            .catch((error) =>
-                res.status(422).json({
-                    msg: `Something unexpected happened while updating user data.`,
-                    error: {
-                        name: error.name,
-                        message: error.message,
-                        detail: error,
-                    },
-                })
-            );
-    } catch (error) {
-        res.status(422).json({
-            msg: `Something unexpected happened while getting user data.`,
-            error: { name: error.name, message: error.message, detail: error },
-        });
-    }
-};
-
-UserController.putNewPassword = (req, res) => {
-    let id = req.params.pk;
-    let oldPassword = req.body.oldPassword;
-    let newPassword = req.body.newPassword;
-
-    User.findOne({
-        where: { id: id },
-    })
-        .then((userFound) => {
-            if (userFound) {
-                if (bcrypt.compareSync(oldPassword, userFound.password)) {
-                    newPassword = bcrypt.hashSync(
-                        newPassword,
-                        Number.parseInt(authConfig.rounds)
-                    );
-                    let data = {
-                        password: newPassword,
+                    console.log(usersWithSameEmailOrNickname);
+                    return {
+                        status: 200,
+                        data: {
+                            msg: 'The user with this email or nickname is already registered.',
+                        },
                     };
-                    userFound
-                        .update(data, {})
-                        .then((updated) => {
-                            res.send(updated);
+                }
+            })
+            .catch((error) => {
+                return {
+                    status: 422,
+                    data: {
+                        msg: `Something unexpected happened while getting user data.`,
+                        error: {
+                            name: error.name,
+                            message: error.message,
+                            detail: error,
+                        },
+                    },
+                };
+            });
+        return newUser;
+    }
+
+    async postLogin(email, password) {
+        const user = User.findOne({
+            where: { email: email },
+        })
+            .then((user) => {
+                if (!user) {
+                    return {
+                        status: 401,
+                        data: {
+                            msg: 'Invalid user or password.',
+                        },
+                    };
+                } else {
+                    if (bcrypt.compareSync(password, user.password)) {
+                        let token = jwt.sign(
+                            { user: user },
+                            authConfig.secret,
+                            {
+                                expiresIn: authConfig.expires,
+                            }
+                        );
+                        return {
+                            status: 200,
+                            data: {
+                                user: user,
+                                token: token,
+                            },
+                        };
+                    } else {
+                        return {
+                            status: 401,
+                            data: {
+                                msg: 'Invalid user or password.',
+                            },
+                        };
+                    }
+                }
+            })
+            .catch((error) => {
+                return {
+                    status: 422,
+                    data: {
+                        msg: `Something unexpected happened while logging user.`,
+                        error: {
+                            name: error.name,
+                            message: error.message,
+                            detail: error,
+                        },
+                    },
+                };
+            });
+        return user;
+    }
+
+    async postFindUserByMail(email) {
+        const user = User.findOne({ where: { email: email } })
+            .then((data) => {
+                if (data) {
+                    return { status: 200, data: data };
+                } else {
+                    return {
+                        status: 404,
+                        data: {
+                            error: {
+                                name: 'NotFound',
+                                message: 'User not found',
+                            },
+                        },
+                    };
+                }
+            })
+            .catch((error) => {
+                return {
+                    status: 422,
+                    data: {
+                        msg: 'Something unexpected happened while getting user by mail.',
+                        error: {
+                            name: error.name,
+                            message: error.message,
+                            detail: error,
+                        },
+                    },
+                };
+            });
+        return user;
+    }
+
+    async getAllUsers() {
+        const users = await User.findAll()
+            .then((data) => {
+                return { status: 200, data: data };
+            })
+            .catch((error) => {
+                return {
+                    status: 422,
+                    data: {
+                        msg: `Something unexpected happened while getting users.`,
+                        error: {
+                            name: error.name,
+                            message: error.message,
+                            detail: error,
+                        },
+                    },
+                };
+            });
+        return users;
+    }
+
+    async getUserByPk(pk) {
+        const user = await User.findByPk(pk)
+            .then((data) => {
+                if (data) {
+                    return { status: 200, data: data };
+                } else {
+                    return {
+                        status: 404,
+                        data: {
+                            error: {
+                                name: 'NotFound',
+                                message: 'User not found',
+                            },
+                        },
+                    };
+                }
+            })
+            .catch((error) => {
+                return {
+                    status: 422,
+                    data: {
+                        msg: `Something unexpected happened while getting user.`,
+                        error: {
+                            name: error.name,
+                            message: error.message,
+                            detail: error,
+                        },
+                    },
+                };
+            });
+        return user;
+    }
+
+    async putUserByPk(data, pk) {
+        if (Object.values(data).every((value) => value === undefined)) {
+            return {
+                status: 400,
+                data: {
+                    error: {
+                        name: 'BadRequest',
+                        message: 'No data provided',
+                    },
+                },
+            };
+        }
+
+        const user = User.findByPk(pk)
+            .then((user) => {
+                if (!user) {
+                    return {
+                        status: 404,
+                        data: {
+                            error: {
+                                name: 'NotFound',
+                                message: 'User not found',
+                            },
+                        },
+                    };
+                } else {
+                    return user
+                        .update(data, {
+                            where: { id: pk },
+                        })
+                        .then((updatedUser) => {
+                            return {
+                                status: 200,
+                                data: {
+                                    msg: `User with pk ${pk} was updated.`,
+                                    user: updatedUser,
+                                },
+                            };
                         })
                         .catch((error) => {
-                            res.status(400).json({
-                                msg: `Some error happened while updating the password.`,
-                                error: error,
+                            return {
+                                status: 422,
+                                data: {
+                                    msg: `Something unexpected happened while updating user data.`,
+                                    error: {
+                                        name: error.name,
+                                        message: error.message,
+                                        detail: error,
+                                    },
+                                },
+                            };
+                        });
+                }
+            })
+            .catch((error) => {
+                return {
+                    status: 400,
+                    data: {
+                        msg: `Something unexpected happened while updating user data.`,
+                        error: {
+                            name: error.name,
+                            message: error.message,
+                            detail: error,
+                        },
+                    },
+                };
+            });
+        return user;
+    }
+
+    async putNewPassword(pk, oldPassword, newPassword) {
+        const user = User.findByPk(pk)
+            .then((userFound) => {
+                if (userFound) {
+                    if (bcrypt.compareSync(oldPassword, userFound.password)) {
+                        newPassword = bcrypt.hashSync(
+                            newPassword,
+                            Number.parseInt(authConfig.rounds)
+                        );
+                        let data = {
+                            password: newPassword,
+                        };
+                        return userFound
+                            .update(data, {})
+                            .then((updatedUser) => {
+                                let token = jwt.sign(
+                                    { user: updatedUser },
+                                    authConfig.secret,
+                                    {
+                                        expiresIn: authConfig.expires,
+                                    }
+                                );
+                                return {
+                                    status: 200,
+                                    data: {
+                                        msg: `Password from ${userFound.name} was updated.`,
+                                        user: updatedUser,
+                                        token: token,
+                                    },
+                                };
+                            })
+                            .catch((error) => {
+                                return {
+                                    status: 400,
+                                    data: {
+                                        msg: `Some error happened while updating the password.`,
+                                        error: {
+                                            name: error.name,
+                                            message: error.message,
+                                            detail: error,
+                                        },
+                                    },
+                                };
                             });
+                    } else {
+                        return {
+                            status: 401,
+                            data: {
+                                msg: 'Invalid user or password.',
+                            },
+                        };
+                    }
+                } else {
+                    return {
+                        status: 404,
+                        data: {
+                            error: {
+                                name: 'NotFound',
+                                message: 'User not found',
+                            },
+                        },
+                    };
+                }
+            })
+            .catch((error) => {
+                return {
+                    status: 422,
+                    data: {
+                        msg: `Something unexpected happened while updating user password.`,
+                        error: {
+                            name: error.name,
+                            message: error.message,
+                            detail: error,
+                        },
+                    },
+                };
+            });
+        return user;
+    }
+
+    async deleteUserByPk(pk) {
+        const user = User.findByPk(pk)
+            .then((user) => {
+                if (user) {
+                    return user
+                        .destroy({
+                            truncate: false,
+                        })
+                        .then(() => {
+                            return {
+                                status: 200,
+                                data: {
+                                    msg: `User with id ${pk} was deleted.`,
+                                },
+                            };
+                        })
+                        .catch((error) => {
+                            return {
+                                status: 400,
+                                data: {
+                                    msg: `Something unexpected happened while deleting user.`,
+                                    error: {
+                                        name: error.name,
+                                        message: error.message,
+                                        detail: error,
+                                    },
+                                },
+                            };
                         });
                 } else {
-                    res.status(401).json({ msg: 'Invalid user or password.' });
+                    return {
+                        status: 404,
+                        data: {
+                            error: {
+                                name: 'NotFound',
+                                message: `User with id ${pk} does not exists, you can't delete a phantom.`,
+                            },
+                        },
+                    };
                 }
-            } else {
-                res.status(404).send(`User not found.`);
-            }
-        })
-        .catch((error) => {
-            res.status(400).json({
-                msg: `Something unexpected happened.`,
-                error: { name: error.name, message: error.message },
+            })
+            .catch((error) => {
+                return {
+                    status: 422,
+                    data: {
+                        msg: `Something unexpected happened while deleting user.`,
+                        error: {
+                            name: error.name,
+                            message: error.message,
+                            detail: error,
+                        },
+                    },
+                };
             });
-        });
-};
-
-UserController.deleteUserById = async (req, res) => {
-    let id = req.params.pk;
-
-    try {
-        User.findOne({
-            where: { id: id },
-        }).then((user) => {
-            if (user) {
-                user.destroy({
-                    truncate: false,
-                });
-                res.status(200).json({
-                    msg: `User with id ${id} was deleted.`,
-                });
-            } else {
-                res.status(404).json({
-                    msg: `User with id ${id} does not exists, you can't delete a phantom.`,
-                });
-            }
-        });
-    } catch (error) {
-        res.send(error);
+        return user;
     }
-};
+}
 
+const UserController = new UserMethods();
 module.exports = UserController;
