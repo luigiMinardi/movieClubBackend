@@ -5,6 +5,9 @@ end_of_line = lf
 insert_final_newline = true
 
 [*.{js,json,yml,ts}]
+charset = utf-8
+quote_type = single
+intent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 
